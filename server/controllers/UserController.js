@@ -1,6 +1,6 @@
-import UserModel from '../models/user.model';
+const UserModel = require('../models/user.model')
 
-export const UserDetails = async (req, res) => {
+const UserDetails = async (req, res) => {
     try {
         const { UserID } = await req.body;
         if(!UserID) {
@@ -31,3 +31,5 @@ export const UserDetails = async (req, res) => {
         })
     }
 }
+
+module.exports = {UserDetails}

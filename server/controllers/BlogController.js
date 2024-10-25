@@ -1,8 +1,8 @@
-import BlogModel from '../models/blog.model';
-import UserModel from '../models/user.model';
-import jwt from 'jsonwebtoken';
+const BlogModel = require('../models/blog.model');
+const UserModel = require('../models/user.model');
+const jwt = require('jsonwebtoken')
 
-export const CreateBlog = async (req, res) => {
+const CreateBlog = async (req, res) => {
     try {
         const { title, content, imageURL } = req.body;
 
@@ -67,7 +67,7 @@ export const CreateBlog = async (req, res) => {
     }
 };
 
-export const DeleteBlog = async (req, res) => {
+const DeleteBlog = async (req, res) => {
     try {
         const { BlogID } = await req.body;
         if (!BlogID) {
@@ -98,7 +98,7 @@ export const DeleteBlog = async (req, res) => {
     }
 }
 
-export const GetBlog = async (req, res) => {
+const GetBlog = async (req, res) => {
     try {
         const { BlogID } = await req.body;
         if (!BlogID) {
@@ -130,7 +130,7 @@ export const GetBlog = async (req, res) => {
     }
 }
 
-export const GetAllBlogs = async (req, res) => {
+const GetAllBlogs = async (req, res) => {
     try {
         const blogs = await BlogModel.find();
         return res.json({
@@ -146,6 +146,7 @@ export const GetAllBlogs = async (req, res) => {
     }
 }
 
+module.exports = { CreateBlog, DeleteBlog, GetBlog, GetAllBlogs };
 
 
 

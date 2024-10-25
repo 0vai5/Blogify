@@ -1,116 +1,115 @@
-import UserModel from '../models/UserModel';
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcryptjs';
+const UserModel = require('../models/user.model');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-export const SignUP = async (req, res) => {
+const SignUP = async (req, res) => {
     try {
-        const { email, userName, password } = await req.body;
-        if (!email || !userName || !password) {
+        const { email, username, password } = req.body;
+        if (!email || !username || !password) {
             return res.json({
                 message: "All Fields are Required",
                 status: 304
-            })
+            });
         }
-        const user = await UserModel.find({ email });
+
+        const user = await UserModel.findOne({ email }); // Changed to findOne
         if (user) {
             return res.json({
                 message: "User Already Exists",
                 status: 304
-            })
+            });
         }
 
-        const hashedPassword = bcrypt.hash(password, 10);
+        const hashedPassword = await bcrypt.hash(password, 10); // Awaiting the hashing
         const newUser = new UserModel({
             email,
-            userName,
+            username,
             password: hashedPassword
-        })
+        });
         await newUser.save();
         return res.json({
             message: "User Created Successfully",
             status: 200
-        })
+        });
 
     } catch (error) {
         return res.json({
             message: "Something Went Wrong",
             status: 500
-        })
+        });
     }
-}
+};
 
-export const SignIN = async (req, res) => {
+const SignIN = async (req, res) => {
     try {
-        const { email, password } = await req.body;
+        const { email, password } = req.body;
         if (!email || !password) {
             return res.json({
                 status: 304,
                 message: "All Fields are Required"
-            })
+            });
         }
 
-        const user = await UserModel.find({ email });
+        const user = await UserModel.findOne({ email }); // Changed to findOne
         if (!user) {
             return res.json({
                 status: 404,
-                message: "The User Not Exists"
-            })
+                message: "The User Does Not Exist"
+            });
         }
 
-        const checkedPassword = bcrypt.compare(password, user.password);
+        const checkedPassword = await bcrypt.compare(password, user.password); // Awaiting the password check
         if (!checkedPassword) {
             return res.json({
                 status: 401,
                 message: "Invalid Credentials"
-            })
+            });
         }
+
         const tokenData = {
             userID: user._id,
             userName: user.userName
-        }
+        };
 
         const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
             expiresIn: '1h'
-        })
+        });
 
-        const response = res.json({
+        // Set token in cookies
+        res.cookie("token", token, {
+            httpOnly: true,
+            maxAge: 3600 * 1000, // 1 hour in milliseconds
+            path: '/'
+        });
+
+        return res.json({
             status: 200,
-            message: "Logged IN SuccessFully",
+            message: "Logged In Successfully",
             user
         });
 
-        response.cookies.set("token", token, {
-            httpOnly: true,
-            maxAge: 3600,
-            path: '/'
-        })
-
-        return response;
-
     } catch (error) {
         return res.json({
             status: 500,
             message: "Something Went Wrong"
-        })
+        });
     }
-}
+};
 
-export const SignOut = async (req, res) => {
+const SignOut = async (req, res) => {
     try {
-        const response = res.json({
+        res.clearCookie("token", { path: '/' }); // Clear the cookie
+        return res.json({
             status: 200,
             message: "Successfully Logged Out"
-        })
-
-        response.cookies.set("token", "", {
-            httpOnly: true,
-            maxAge: new Date(0),
-        })
+        });
 
     } catch (error) {
         return res.json({
             status: 500,
             message: "Something Went Wrong"
-        })
+        });
     }
-}
+};
+
+module.exports = { SignUP, SignIN, SignOut }; 
