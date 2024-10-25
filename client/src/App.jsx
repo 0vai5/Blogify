@@ -1,10 +1,24 @@
 import react from 'react';
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import Header from "@/components/Header";
 
 const App = () => {
   return (
-    <h1 className="text-3xl font-bold underline">
-      Hello world!
-    </h1>
+    <main className={'bg-white/80'}>
+      <Router>
+        <Header />
+        <Routes>
+          <Route path='/' element={'Home'} />
+          <Route path='/signin' element={'signin'} />
+          <Route path='/signup' element={'signup'} />
+          <Route path='/create-blog' element={'create-blog'} />
+          <Route path='/edit-blog' element={'edit-blog'} />
+          <Route path='/profile' element={'profile'} />
+          <Route path='/blogs' element={'blogs'} />
+          <Route path='/blog' element={'blog'} />
+        </Routes>
+      </Router>
+    </main>
   )
 }
 
