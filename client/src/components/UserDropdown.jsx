@@ -10,7 +10,6 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import toast from "react-hot-toast";
 import { LogOut, LogIn, User } from "lucide-react";
-import ThemeButton from "./ThemeButton";
 import { useState } from "react";
 
 
@@ -46,9 +45,6 @@ export default function UserDropdown() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator className="dark:text-gray-200 text-black" />
-        <div className="">
-          <ThemeButton />
-        </div>
         {user ? (
           <>
            <div className="p-3">
