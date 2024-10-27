@@ -1,5 +1,15 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Header from "@/components/Header";
+import {
+  Home,
+  SignIn,
+  SignUp,
+  CreateBlog,
+  EditBlog,
+  Profile,
+  Blogs,
+  Blog
+} from "@/pages/index"
 
 const App = () => {
   return (

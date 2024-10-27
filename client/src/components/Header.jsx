@@ -1,6 +1,8 @@
-import NavItems from "./NavItems";
-import MobileNav from "./MobileNav";
-import UserDropdown from "./UserDropdown";
+import {
+  NavItems,
+  MobileNav,
+  UserDropdown
+} from "./index"
 
 const Header = () => {
   return (
