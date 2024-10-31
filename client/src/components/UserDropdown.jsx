@@ -35,7 +35,7 @@ export default function UserDropdown() {
   };
 
   return (
-    <DropdownMenu>
+    <DropdownMenu className="bg-white">
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage src="/user.svg" className="cursor-pointer dark:hidden" />

@@ -58,7 +58,10 @@ import {
     SheetTitle,
     SheetTrigger
 } from "./ui/sheet"
-
+import {
+    Label
+} from "./ui/label"
+import { Input } from "./ui/input"
 
 export {
     Header,
@@ -109,4 +112,6 @@ export {
     NavigationMenuViewport,
     navigationMenuTriggerStyle,
     SheetClose,
+    Input,
+    Label
 }

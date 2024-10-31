@@ -24,8 +24,6 @@ const MobileNav = () => {
               <img
                 src={'./vite.svg'}
                 alt="Company Logo"
-                width={150}
-                height={100}
               />
             </a>
           </div>
