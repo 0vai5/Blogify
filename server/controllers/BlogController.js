@@ -116,10 +116,23 @@ const GetBlog = async (req, res) => {
             })
         }
 
+        const user = await UserModel.findById(blog.User);
+        if (!user) {
+            return res.json({
+                status: 304,
+                message: "User Not Found"
+            })
+        }
+
+        const blogData = {
+            ...blog,
+            author: user.username
+        }
+
         return res.json({
             status: 200,
             message: "Blog Found",
-            blog
+            blogData
         })
 
     } catch (error) {

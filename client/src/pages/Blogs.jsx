@@ -1,8 +1,11 @@
 import react from "react";
+import { BlogsSection } from "@/components"
 
 const Blogs = () => {
     return (
-        <div>Blogs</div>
+        <section className="max-container">
+            <BlogsSection />
+        </section>
     )
 }
 

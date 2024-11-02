@@ -15,6 +15,7 @@ const BlogCard = ({post}) => {
             <CardContent>
                 <h3 className="text-2xl font-semibold">{post.title}</h3>
                 <p className="text-xl">{post.content.substring(0, 300)}...</p>
+                <p className="text-gray-100">By. {post.author}</p>
             </CardContent>
             <CardFooter>
                 <Button variant="destructive" size="md">Read More</Button>

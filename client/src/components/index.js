@@ -2,6 +2,7 @@ import Header from "./Header";
 import MobileNav from "./MobileNav";
 import NavItems from "./NavItems";
 import UserDropdown from "./UserDropdown";
+import BlogsSection from "./Blogs";
 import {
     Avatar,
     AvatarFallback,
@@ -72,6 +73,7 @@ export {
     BlogCard,
     NavItems,
     UserDropdown,
+    BlogsSection,
     Sheet,
     SheetTrigger,
     SheetContent,
