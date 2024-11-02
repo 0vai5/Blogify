@@ -10,25 +10,21 @@ const blogSchema = new Schema({
         type: String,
         required: true
     },
-    Image: {
+    imageURL: {
         type: String,
         required: true
     },
-    User: {
+    author: {
+        type: String,
+        required: true
+    },
+    user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
     },
-    comments: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Comment'
-    }],
     date: {
         type: Date,
         default: Date.now
-    },
-    likes: {
-        type: Number,
-        default: 0
     },
 })
 

@@ -46,7 +46,8 @@ const CreateBlog = async (req, res) => {
             title,
             content,
             imageURL,
-            User: user._id
+            user: user._id,
+            author: user.username
         });
 
         // Associate the blog with the user
@@ -116,23 +117,11 @@ const GetBlog = async (req, res) => {
             })
         }
 
-        const user = await UserModel.findById(blog.User);
-        if (!user) {
-            return res.json({
-                status: 304,
-                message: "User Not Found"
-            })
-        }
-
-        const blogData = {
-            ...blog,
-            author: user.username
-        }
 
         return res.json({
             status: 200,
             message: "Blog Found",
-            blogData
+            blog
         })
 
     } catch (error) {

@@ -21,10 +21,6 @@ const userSchema = new Schema({
     blogs: [{
         type: Schema.Types.ObjectId,
         ref: 'Blog'
-    }],
-    comments: [{
-        type: Schema.Types.ObjectId,
-        ref: 'Comment'
     }]
 })
 

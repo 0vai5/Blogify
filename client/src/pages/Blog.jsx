@@ -1,21 +1,43 @@
-import react, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 
 const Blog = () => {
-    const [blog, setBlog] = useState({
-        Image: "https://i.ytimg.com/vi/jPl34SsWgq4/hq720.jpg?sqp=-oaymwEhCK4FEIIDSFryq4qpAxMIARUAAAAAGAElAADIQj0AgKJD&rs=AOn4CLCqRiSqAkXB7BlEtJXAnY6Wh3FNLQ",
-        title: "React and Snity",
-        author: "Ovais Raza",
-        content: "hey it is a long blog and it can be done like the way i can doo as i like"
-    })
+    const [blog, setBlog] = useState(null);
+    const location = useLocation();
+
+    const fetchBlog = async () => {
+        const { BlogID } = getQueryParams();
+        const response = await fetch("http://localhost:3000/blog/getBlog", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ BlogID }), // Send BlogID as part of the request body
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            setBlog(data);
+        } else {
+            console.error("Failed to fetch blog data");
+        }
+    };
+
+    useEffect(() => {
+        fetchBlog();
+    }, [location.search]); // Re-fetch if the query params change
+
+    if (!blog) return <p>Loading...</p>;
+
     return (
         <section className="max-container">
             <div>
                 <img 
-                src={blog.Image} 
-                alt={blog.title}
-                height={"200px"}
-                width={"100%"}
-                className="bg-contain bg-center"
+                    src={blog.Image} 
+                    alt={blog.title}
+                    height={"200px"}
+                    width={"100%"}
+                    className="bg-contain bg-center"
                 />
             </div>
             <div>
@@ -23,11 +45,11 @@ const Blog = () => {
             </div>
             <div className="flex justify-between items-center">
                 <p>{blog.author}</p>
-                <p>DAte</p>
+                <p>Date</p>
             </div>
             <div>{blog.content}</div>
         </section>
-    )
-}
+    );
+};
 
 export default Blog;

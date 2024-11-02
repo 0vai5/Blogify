@@ -6,7 +6,7 @@ const BlogCard = ({post}) => {
         <Card className="w-full p-3">
             <CardTitle>
                 <img 
-                src={post.image}
+                src={post.imageUrl}
                 alt={post.title}
                 height={"200px"}
                 width={"400px"}
