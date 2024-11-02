@@ -1,8 +1,12 @@
-import react from "react";
+import react, { useState } from "react";
+import { FeaturedBlogs } from "@/components"
 
 const Home = () => {
+    const [posts, setPosts] = useState(null)
     return (
-        <div>Home</div>
+        <main className="max-container">
+            <FeaturedBlogs posts={posts} />
+        </main>
     )
 }
 

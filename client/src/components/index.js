@@ -62,10 +62,14 @@ import {
     Label
 } from "./ui/label"
 import { Input } from "./ui/input"
+import FeaturedBlogs from "./FeaturedBlogs";
+import BlogCard from "./BlogCard"
 
 export {
     Header,
+    FeaturedBlogs,
     MobileNav,
+    BlogCard,
     NavItems,
     UserDropdown,
     Sheet,
