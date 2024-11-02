@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import react, { useContext, useState } from "react";
 import {
     Card,
     CardContent,
@@ -12,6 +12,7 @@ import {
 } from "@/components/index"
 import { useForm } from "react-hook-form"
 import toast, { Toaster } from "react-hot-toast";
+import { GlobalContext } from "@/contexts/GlobalContext";
 const SignIn = () => {
     const {
         register,
@@ -20,6 +21,8 @@ const SignIn = () => {
         formState: { errors }
     } = useForm()
     const [loading, setLoading] = useState(false)
+    const { setUser, setIsLoggedIn } = useContext(GlobalContext)
+
 
     const onSubmit = async (data) => {
         try {
@@ -33,6 +36,8 @@ const SignIn = () => {
             })
 
             const data = await response.json();
+            setUser = data.user.username;
+            setIsLoggedIn(true);
             setLoading(false)
             toast.success(data.message)
         } catch (error) {

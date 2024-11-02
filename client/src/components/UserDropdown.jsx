@@ -11,11 +11,12 @@ import {
 } from "./index"
 import toast from "react-hot-toast";
 import { LogOut, LogIn, User } from "lucide-react";
-import { useState } from "react";
+import { useContext, useState } from "react";
+import { GlobalContext } from "@/contexts/GlobalContext";
 
 
 export default function UserDropdown() {
-  const [user, setUser] = useState(false)
+  const { isLoggedIn } = useContext(GlobalContext)
 
   // const router = useRouter();
 
@@ -46,7 +47,7 @@ export default function UserDropdown() {
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Account</DropdownMenuLabel>
         <DropdownMenuSeparator className="dark:text-gray-200 text-black" />
-        {user ? (
+        {isLoggedIn ? (
           <>
             <div className="p-3">
               <a href="/profile">

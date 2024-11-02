@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { GlobalContext } from "@/contexts/GlobalContext";
+import { useContext, useState } from "react";
 import toast, { Toaster } from "react-hot-toast";
 
 const NavItems = () => {
-    const [user, setUser] = useState(false)
+    const { isLoggedIn } = useContext(GlobalContext);
     return (
         <>
             <ul className="flex flex-col md:flex-row gap-10 justify-between items-start md:items-center mt-10 md:mt-0">
@@ -11,7 +12,7 @@ const NavItems = () => {
                         <h4 className="text-xl font-semibold">Home</h4>
                     </a>
                 </li>
-                {user && (
+                {isLoggedIn && (
                     <li>
                         <a href="/create-blog">
                             <h4 className="text-xl font-semibold">Create Blog</h4>

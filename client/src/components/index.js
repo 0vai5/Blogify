@@ -3,6 +3,7 @@ import MobileNav from "./MobileNav";
 import NavItems from "./NavItems";
 import UserDropdown from "./UserDropdown";
 import BlogsSection from "./Blogs";
+import WelcomeText from "./WelcomeText"
 import {
     Avatar,
     AvatarFallback,
@@ -74,6 +75,7 @@ export {
     NavItems,
     UserDropdown,
     BlogsSection,
+    WelcomeText,
     Sheet,
     SheetTrigger,
     SheetContent,
