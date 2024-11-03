@@ -45,14 +45,6 @@ const App = () => {
             } 
           />
           <Route 
-            path="/edit-blog" 
-            element={
-              <ProtectedRoute>
-                <EditBlog />
-              </ProtectedRoute>
-            } 
-          />
-          <Route 
             path="/profile" 
             element={
               <ProtectedRoute>
