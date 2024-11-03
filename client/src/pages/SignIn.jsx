@@ -36,7 +36,7 @@ const SignIn = () => {
             })
 
             const data = await response.json();
-            setUser = data.user.username;
+            setUser(data.user.username);
             setIsLoggedIn(true);
             setLoading(false)
             toast.success(data.message)

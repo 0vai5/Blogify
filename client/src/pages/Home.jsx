@@ -25,7 +25,7 @@ const Home = () => {
         <main className="max-container">
             <Toaster reverseOrder={false} position="top-right" />
             <WelcomeText />
-            <FeaturedBlogs posts={posts.slice(0, 3)} />
+            <FeaturedBlogs posts={posts} />
             <BlogsSection posts={posts}/>
         </main>
     )
