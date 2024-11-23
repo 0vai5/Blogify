@@ -1,4 +1,4 @@
-import react, { useState } from "react";
+import react, { useEffect, useState } from "react";
 import { BlogsSection } from "@/components"
 
 const Blogs = () => {

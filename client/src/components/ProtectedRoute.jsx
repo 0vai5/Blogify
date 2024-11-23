@@ -1,11 +1,24 @@
-import React, { useContext } from 'react';
-import { GlobalContext } from '@/contexts/GlobalContext';
-import { SignIn } from '@/pages';
+import React, { useContext } from "react";
+import { UserContext } from "../contexts/UserContext";
+import { Navigate, useLocation } from "react-router-dom";
 
 const ProtectedRoute = ({ children }) => {
-    const { isLoggedIn } = useContext(GlobalContext);
+  const { isLoggedIn } = useContext(UserContext);
+  const location = useLocation();
 
-    return isLoggedIn ? children : <SignIn />;
+  if (isLoggedIn && location.pathname === "/signup") {
+    return <Navigate to="/" />;
+  }
+
+  if (
+    !isLoggedIn &&
+    location.pathname !== "/signup" &&
+    location.pathname !== "/signin"
+  ) {
+    return <Navigate to="/signin" />;
+  }
+
+  return <>{children}</>;
 };
 
 export default ProtectedRoute;

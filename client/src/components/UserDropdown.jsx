@@ -5,31 +5,30 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-  Avatar, 
-  AvatarFallback, 
-  AvatarImage
-} from "./index"
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "./index";
 import toast from "react-hot-toast";
 import { LogOut, LogIn, User } from "lucide-react";
 import { useContext, useState } from "react";
-import { GlobalContext } from "@/contexts/GlobalContext";
-
+import { UserContext } from "@/contexts/UserContext";
 
 export default function UserDropdown() {
-  const { isLoggedIn } = useContext(GlobalContext)
-
-  // const router = useRouter();
+  const { isLoggedIn } = useContext(UserContext)
 
   const LogoutHandler = async () => {
     try {
-      const response = await fetch("/api/users/logout");
-      if (response.ok) {
-        const result = await response.json();
-        toast.success(result.message);
-        // router.push("/login");
-      } else {
-        console.error("Logout failed: ", response.statusText);
+      const response = await fetch("http://localhost:3000/users/signOUT");
+
+      const data = await response.json()
+      if(!response.ok) {
+        toast.error(data.message);
       }
+
+      toast.success(data.message)
+      window.location.replace("/signin")
+
     } catch (error) {
       console.error("Error during logout: ", error);
     }
@@ -40,7 +39,10 @@ export default function UserDropdown() {
       <DropdownMenuTrigger asChild>
         <Avatar>
           <AvatarImage src="/user.svg" className="cursor-pointer dark:hidden" />
-          <AvatarImage src="/user-dark.svg" className="cursor-pointer hidden dark:flex" />
+          <AvatarImage
+            src="/user-dark.svg"
+            className="cursor-pointer hidden dark:flex"
+          />
           <AvatarFallback className="cursor-pointer">CN</AvatarFallback>
         </Avatar>
       </DropdownMenuTrigger>

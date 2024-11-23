@@ -43,55 +43,65 @@ const SignUP = async (req, res) => {
 const SignIN = async (req, res) => {
     try {
         const { email, password } = req.body;
+
+        // Validate input
         if (!email || !password) {
-            return res.json({
-                status: 304,
-                message: "All Fields are Required"
+            return res.status(400).json({
+                status: 400,
+                message: "All fields are required"
             });
         }
 
-        const user = await UserModel.findOne({ email }); // Changed to findOne
+        // Find user by email
+        const user = await UserModel.findOne({ email });
         if (!user) {
-            return res.json({
+            return res.status(404).json({
                 status: 404,
-                message: "The User Does Not Exist"
+                message: "The user does not exist"
             });
         }
 
-        const checkedPassword = await bcrypt.compare(password, user.password); // Awaiting the password check
-        if (!checkedPassword) {
-            return res.json({
+        // Compare password
+        const isPasswordValid = await bcrypt.compare(password, user.password);
+        if (!isPasswordValid) {
+            return res.status(401).json({
                 status: 401,
-                message: "Invalid Credentials"
+                message: "Invalid credentials"
             });
         }
 
+        // Generate JWT token
         const tokenData = {
             userID: user._id,
-            userName: user.userName
+            userName: user.username
         };
 
         const token = jwt.sign(tokenData, process.env.TOKEN_SECRET, {
-            expiresIn: '1h'
+            expiresIn: "1h" // Token validity
         });
 
         // Set token in cookies
         res.cookie("token", token, {
             httpOnly: true,
-            maxAge: 3600 * 1000, // 1 hour in milliseconds
-            path: '/'
+            maxAge: 3600 * 1000, 
+            path: "/"
         });
 
+        // Send success response
         return res.json({
             status: 200,
-            message: "Logged In Successfully",
-            user
+            message: "Logged in successfully",
+            user: {
+                id: user._id,
+                username: user.username,
+                email: user.email
+            }
         });
-
     } catch (error) {
+        console.error("Error during sign-in:", error);
         return res.json({
             status: 500,
-            message: "Something Went Wrong"
+            message: "Something went wrong"
         });
     }
 };

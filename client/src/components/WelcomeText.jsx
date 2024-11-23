@@ -1,9 +1,10 @@
-import { GlobalContext } from "@/contexts/GlobalContext";
+import { UserContext } from "@/contexts/UserContext";
 import react, { useContext } from "react";
 
 const WelcomeText = () => {
-    const { user } = useContext(GlobalContext)
-    return user ? <h1 className="head-text">Welcome, {user}</h1> : ""
-}
+  const { user } = useContext(UserContext);
 
-export default WelcomeText
+  return <>{user && <h1 className="head-text">Welcome {user}</h1>}</>;
+};
+
+export default WelcomeText;

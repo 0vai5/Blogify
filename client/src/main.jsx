@@ -2,12 +2,15 @@ import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import App from "./App.jsx";
-import { GlobalContextProvider } from "./contexts/GlobalContext";
+import { UserContextProvider } from "./contexts/UserContext";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <GlobalContextProvider>
-      <App />
-    </GlobalContextProvider>
+    <UserContextProvider>
+      <ProtectedRoute>
+        <App />
+      </ProtectedRoute>
+    </UserContextProvider>
   </StrictMode>
 );

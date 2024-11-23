@@ -4,9 +4,12 @@ const AuthRoutes = require('./routes/AuthRoutes');
 const BlogRoutes = require('./routes/BlogRoutes');
 const UserRoutes = require('./routes/UserRoutes');
 const DBConnect = require('./DBConfig/DBConfig');
+const cors = require('cors');
 const app = express();
 DBConnect();
 
+
+app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
