@@ -1,5 +1,5 @@
 export class ApiResponse {
-    constructor(status = 500, message, data = [], token = null) {
+    constructor(status = 500, message = "something went wrong", data = [], token = null) {
 
         this.status = status;
         this.message = message
