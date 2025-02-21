@@ -4,6 +4,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import connectDB from "./db/db.config.js";
 import logger from "morgan";
+import userRouter from "./routes/UserRoutes.js";
+import blogRouter from "./routes/BlogRoutes.js";
 
 
 const app = express();
@@ -31,7 +33,8 @@ app.use(
 );
 app.use(logger('dev'));
 
-
+app.use("/api/v1/user", userRouter)
+app.use("/api/v1/blog", blogRouter)
 
 app.listen(port, () => {
     console.log(`Server is Running on ${port}`);

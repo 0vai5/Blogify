@@ -8,7 +8,7 @@ import {
 import { ApiResponse } from "../utils/ApiResponse.js";
 import { CustomError } from "../utils/CustomError.js";
 
-const authController = {
+const userController = {
   async signup(req, res) {
     try {
       const { error, value } = userSignUpSchema.validate(req.body);
@@ -96,6 +96,22 @@ const authController = {
         .json(new ApiResponse(error.status, error.message));
     }
   },
+  async getUserProfile(req, res) {
+    try {
+      const {id} = req.user;
+
+
+      const user = await User.findById(id);
+
+      if (!user) throw new CustomError(404, "User not found");
+
+      
+
+
+    } catch (error) {
+      return res.status(error.status || 500).json(new ApiResponse(error.status, error.message));
+    }
+  }
 };
 
-export default authController;
+export default userController;

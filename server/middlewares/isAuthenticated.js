@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import { ApiResponse } from "../utils/ApiResponse";
-import { CustomError } from "../utils/CustomError";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { CustomError } from "../utils/CustomError.js";
 
 export const isAuthenticated = async (req, res, next) => {
   try {
