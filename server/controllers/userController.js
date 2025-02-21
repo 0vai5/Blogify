@@ -98,20 +98,33 @@ const userController = {
   },
   async getUserProfile(req, res) {
     try {
-      const {id} = req.user;
+      const { id } = req.user;
 
-
-      const user = await User.findById(id);
+      const user = await User.aggregate([
+        {
+          $match: {
+            _id: id,
+          },
+        },
+        {
+          $lookup: {
+            from: "Blog",
+            localField: "_id",
+            foreignField: "userID",
+            as: "blogs",
+          },
+        },
+      ]);
 
       if (!user) throw new CustomError(404, "User not found");
 
-      
-
-
+      return res.status(200).json(new ApiResponse(200, "User found", user));
     } catch (error) {
-      return res.status(error.status || 500).json(new ApiResponse(error.status, error.message));
+      return res
+        .status(error.status || 500)
+        .json(new ApiResponse(error.status, error.message));
     }
-  }
+  },
 };
 
 export default userController;
