@@ -1,154 +1,112 @@
-const BlogModel = require('../models/blog.model');
-const UserModel = require('../models/user.model');
-const jwt = require('jsonwebtoken')
+import Blog from "../models/blog.model.js";
+import { ApiResponse } from "../utils/ApiResponse.js";
+import { CustomError } from "../utils/CustomError.js";
+import User from "../models/user.model.js";
+import { fileUploadToCloudinary } from "../utils/cloudinary.js";
 
-const CreateBlog = async (req, res) => {
+const blogController = {
+  async createBlog(req, res) {
     try {
-        const { title, content, imageURL } = req.body;
+      const { title, content } = req.body;
+      const file = req.file;
 
-        // Validate required fields
-        if (!title || !content || !imageURL) {
-            return res.status(400).json({
-                status: 400,
-                message: 'All fields are required.'
-            });
-        }
+      const { id } = req.user;
 
-        // Check for authorization token in cookies
-        const token = req.cookies?.token;
-        if (!token) {
-            return res.status(401).json({
-                status: 401,
-                message: 'Authentication required. Please log in.'
-            });
-        }
+      const user = await User.findById(id);
 
-        // Verify and decode the token
-        const decodedToken = jwt.verify(token, process.env.TOKEN_SECRET);
-        if (!decodedToken) {
-            return res.status(401).json({
-                status: 401,
-                message: 'Invalid token. Please log in again.'
-            });
-        }
+      if (!user) throw new CustomError(404, "User not found");
 
-        // Retrieve user from database
-        const user = await UserModel.findById(decodedToken.id);
-        if (!user) {
-            return res.status(404).json({
-                status: 404,
-                message: 'User not found. Please log in again.'
-            });
-        }
+      const fileLocalPath = file.path;
 
-        // Create and save the blog post
-        const blog = await BlogModel.create({
-            title,
-            content,
-            imageURL,
-            user: user._id,
-            author: user.username
-        });
+      const { url } = await fileUploadToCloudinary(fileLocalPath);
 
-        // Associate the blog with the user
-        user.blogs.push(blog._id);
-        await user.save();
+      const blog = await Blog.create({
+        title,
+        content,
+        imageURL: url,
+        userID: user._id,
+      });
 
-        return res.status(201).json({
-            status: 201,
-            message: 'Blog created successfully.',
-            blog
-        });
+      if (!blog) throw new CustomError(500, "Blog not created");
+
+      return res.status(201).json(new ApiResponse(201, "Blog created", blog));
     } catch (error) {
-        console.error("Error creating blog:", error);
-        return res.status(500).json({
-            status: 500,
-            message: 'An internal server error occurred. Please try again later.'
-        });
+      return res
+        .status(error.status)
+        .json(new ApiResponse(error.status, error.message));
     }
+  },
+  async getBlogs(req, res) {
+    try {
+      const blogs = await Blog.aggregate([
+        {
+          $lookup: {
+            from: "BlogUser",
+            localField: "userID",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $project: {
+            title: 1,
+            content: 1,
+            imageURL: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            "user.name": 1,
+            "user.email": 1,
+          },
+        },
+      ]);
+
+      return res.status(200).json(new ApiResponse(200, "Blogs fetched", blogs));
+    } catch (error) {
+      return res
+        .status(error.status)
+        .json(new ApiResponse(error.status, error.message));
+    }
+  },
+  async getBlog(req, res) {
+    try {
+      const { id } = req.params;
+
+      const blog = await Blog.aggregate([
+        {
+          $match: {
+            _id: mongoose.Types.ObjectId(id),
+          },
+        },
+        {
+          $lookup: {
+            from: "BlogUser",
+            localField: "userID",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $project: {
+            title: 1,
+            content: 1,
+            imageURL: 1,
+            createdAt: 1,
+            updatedAt: 1,
+            "user.name": 1,
+            "user.email": 1,
+          },
+        },
+      ]);
+
+      if (!blog) throw new CustomError(404, "Blog not found");
+
+      return res.status(200).json(new ApiResponse(200, "Blog fetched", blog));
+    } catch (error) {
+      return res
+        .status(error.status)
+        .json(new ApiResponse(error.status, error.message));
+    }
+  },
 };
 
-const DeleteBlog = async (req, res) => {
-    try {
-        const { BlogID } = await req.body;
-        if (!BlogID) {
-            return res.json({
-                status: 304,
-                message: "Please Provide the Blog ID"
-            })
-        }
-
-        const blog = await BlogModel.findById(BlogID);
-        if (!blog) {
-            return res.json({
-                status: 304,
-                message: "Blog Not Found"
-            })
-        }
-
-        await blog.deleteOne();
-        return res.json({
-            status: 200,
-            message: "Blog Deleted Successfully"
-        })
-    } catch (error) {
-        return res.json({
-            status: 500,
-            message: "Internal Server Error"
-        })
-    }
-}
-
-const GetBlog = async (req, res) => {
-    try {
-        const { BlogID } = await req.body;
-        if (!BlogID) {
-            return res.json({
-                status: 304,
-                message: "Please provide BlogId"
-            })
-        }
-
-        const blog = await BlogModel.findById(BlogID);
-        if (!blog) {
-            return res.json({
-                status: 304,
-                message: "Blog Not Found"
-            })
-        }
-
-
-        return res.json({
-            status: 200,
-            message: "Blog Found",
-            blog
-        })
-
-    } catch (error) {
-        return res.json({
-            status: 500,
-            message: "An Error Occured"
-        })
-    }
-}
-
-const GetAllBlogs = async (req, res) => {
-    try {
-        const blogs = await BlogModel.find();
-        return res.json({
-            status: 200,
-            message: "All Blogs Found",
-            blogs
-        })
-    } catch (error) {
-        return res.json({
-            status: 500,
-            message: "An Error Occured"
-        })
-    }
-}
-
-module.exports = { CreateBlog, DeleteBlog, GetBlog, GetAllBlogs };
-
-
-
+export default blogController;

@@ -1,10 +1,12 @@
-const express = require('express');
-const router = express.Router();
-const { CreateBlog, DeleteBlog, GetBlog, GetAllBlogs } = require('../controllers/BlogController');
+import { Router } from "express";
+import { isLoggedIn } from "../middlewares/isLoggedIn.js";
+import { isAuthenticated } from "../middlewares/isAuthenticated.js";
+import BlogController from "../controllers/BlogController.js";
 
-router.post('/createBlog', CreateBlog);
-router.post('/deleteBlog', DeleteBlog);
-router.get('/GetBlog', GetBlog);
-router.get('/getAllBlogs', GetAllBlogs);
+const blogRouter = Router();
 
-module.exports = router;
+blogRouter.post("/createBlog", isAuthenticated, BlogController.createBlog);
+blogRouter.get("/getBlogs", BlogController.getBlogs);
+blogRouter.get("/getBlog/:id", BlogController.getBlog);
+
+export default blogRouter;

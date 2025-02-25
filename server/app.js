@@ -1,22 +1,41 @@
-require('dotenv').config();
-const express = require('express');
-const AuthRoutes = require('./routes/AuthRoutes');
-const BlogRoutes = require('./routes/BlogRoutes');
-const UserRoutes = require('./routes/UserRoutes');
-const DBConnect = require('./DBConfig/DBConfig');
-const cors = require('cors');
+import express from "express";
+import dotenv from "dotenv";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import connectDB from "./db/db.config.js";
+import logger from "morgan";
+import userRouter from "./routes/UserRoutes.js";
+import blogRouter from "./routes/BlogRoutes.js";
+
+
 const app = express();
-DBConnect();
+dotenv.config();
+const port = process.env.PORT;
 
 
-app.use(cors());
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+connectDB();
+app.use(
+    express.urlencoded({
+        extended: true,
+    })
+);
+app.use(
+    express.json({
+        limit: "16kb",
+    })
+);
+app.use(cookieParser());
+app.use(
+    cors({
+        origin: "*",
+        credentials: true,
+    })
+);
+app.use(logger('dev'));
 
-app.use('/auth', AuthRoutes);
-app.use('/blog', BlogRoutes);
-app.use('/user', UserRoutes)
+app.use("/api/v1/user", userRouter)
+app.use("/api/v1/blog", blogRouter)
 
-app.listen(3000, () => {
-    console.log('Server is running on port 3000');
-})
+app.listen(port, () => {
+    console.log(`Server is Running on ${port}`);
+});
